@@ -1,0 +1,102 @@
+---
+output: html_document
+runtime: shiny
+---
+![](https://d3n8a8pro7vhmx.cloudfront.net/righttoresearch/pages/1004/features/original/Berlin_-_NB_Banner.png?1473355209)
+
+# OpenCon Berlin Reproducibility Hack!
+#### 24 Nov 2016
+#### Location: TBC
+
+***
+
+### We're kicking off [**OpenCon Berlin**](http://www.opencon2016.org/opencon_2016_berlin) with a ***hack / creative collaborative coding event!***
+
+There'll be plenty of options to work on a variety of projects according to skills and interest including:
+
+- Developing the Rfigshare package (figshare new API, in potential collaboration with figshare and Ropensci)
+- Continue the CeTrAn project using the new rfigshare package
+
+<br>
+
+### but we have also come up with a core theme: 
+## a **paper reproducibility hack!**
+
+We are all excited by the progress made by many to make their papers fully reproducible by publishing code and data with their papers. We know how challenging it can be so we want to test how successful our current practices are.
+
+Inspired be Owen Petchey's [Reproducible Research in Ecology, Evolution, Behaviour, and Environmental Studies course](https://github.com/opetchey/RREEBES), where students attempt to  reproduce the analysis and figures of a paper from the raw data, we want to attempt to do the same. While they take a few months, we only have a day so instead we'll be trying to do the same but with papers that have also published code. We therefore aim to test how reproducible attempted papers are **'out of the box'**.
+
+What we love about this approach, is it provides a low-pressure environment to begin to actually get stuck into some reprodicibility.
+This is not an attempt to defame the writers. So we see reproduction as useful scientific activitiy in itself, with usrful outcomes for understanding the current state and most common issues to reproducbility and the science in the papers themselves. Instead we see it as a necessary step and hope to provide useful feedback to authors if we encounter difficulties and ofcourse spread the word on successful reproductions.
+
+We know reproducibility can be hard and time consuming so we see a hack as a great opportunity.
+
+### **Nominate a paper:**
+
+We invite nominations from anyone, especially if you would like to test one of your own papers. Either way, it will be best if consent from the original authors has been sought.
+
+
+
+```{r, echo=FALSE}
+library("shiny")
+ wellPanel(a("Nominate Paper", class = "btn btn-primary btn-md", 
+          href = "https://goo.gl/forms/DJoAHVDCeWlG92b03"))
+```
+
+<br>
+```{r}
+ wellPanel(a("Refresh paper list", class = "btn btn-primary btn-md", 
+          href = "javascript:history.go(0)"))
+```
+
+## **Proposed papers:**
+```{r, message=FALSE, warning=FALSE,  echo=FALSE}
+
+require(googlesheets)
+responses_gs <- gs_title("OpenCon Berlin Reproducibility Hack (Responses)")
+responses <- gs_read(responses_gs)
+
+ui <- fluidPage(
+                inputPanel(
+                    actionButton("refresh", "refresh paper list")),
+    
+            uiOutput("papers"))
+
+server <- function(input, output) {
+    
+            responses_gs <- eventReactive(input$refresh, {
+                         gs_title("OpenCon Berlin Reproducibility Hack (Responses)")})
+            get.responses <- reactive({gs_read(responses_gs())})
+            
+                    output$papers <- renderUI({
+                        responses <- get.responses()
+                        w=paste0(
+                        for (i in 1:nrow(responses)){
+                            cat('\n')     
+                            cat('\n')
+                            cat('\n') 
+                            cat("### This is a heading for ", as.character(responses[i, "Paper title"]), "\n") 
+                            cat("#### *submitted by ", as.character(responses[i, "Name"]),"*", "\n")
+                            cat('\n')
+                            cat("**Why should we attempt to reproduce this paper?**", "\n", "\n")
+                            cat(as.character(responses[i, "Why should we attempt to reproduce this paper?"]), "\n")
+                            cat('\n')
+                            cat("**Paper URL:** [", as.character(responses[i, "Paper URL"]),"](",as.character(responses[i, "Paper URL"]) ,")", "\n")
+                            cat('\n')
+                            cat("**Data URL:**", as.character(responses[i, "Data URL"]), "\n")
+                            cat('\n')
+                            cat("**Code URL:**", as.character(responses[i, "Code URL"]), "\n")
+                            cat('\n', "\n")
+                        })
+                        HTML(w)
+                        })
+                    }
+
+shinyApp(ui, server)
+
+
+
+
+
+```
+
