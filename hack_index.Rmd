@@ -57,7 +57,7 @@ library("shiny")
           href = "javascript:history.go(0)"))
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 require(googlesheets)
 suppressMessages(gs_auth(token = "googlesheets_token.rds", verbose = FALSE))
 ```
