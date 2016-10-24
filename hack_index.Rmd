@@ -4,13 +4,17 @@ runtime: shiny
 ---
 ![](https://d3n8a8pro7vhmx.cloudfront.net/righttoresearch/pages/1004/features/original/Berlin_-_NB_Banner.png?1473355209)
 
-# OpenCon Berlin Reproducibility Hack!
-#### 24 Nov 2016
-#### Location: TBC
+# **OpenCon Berlin Reproducibility Hack!**
+<br>
+
+#### **24 Nov 2016 1pm - 6pm (or till we get kicked out)**
+##### [**Technical University of Berlin, Centre for Entrepreneurship**](http://www.entrepreneurship.tu-berlin.de/menue/willkommen/)
+###### [***Hardenbergstraße 38, 10623 Berlin***](https://goo.gl/maps/Q9rMC1vpwpL2)
 
 ***
 
-### We're kicking off [**OpenCon Berlin**](http://www.opencon2016.org/opencon_2016_berlin) with a ***hack / creative collaborative coding event!***
+### We're kicking off [**OpenCon Berlin**](http://www.opencon2016.org/opencon_2016_berlin) with a 
+## **`hack / creative collaborative coding event!`**
 
 There'll be plenty of options to work on a variety of projects according to skills and interest including:
 
@@ -22,14 +26,15 @@ There'll be plenty of options to work on a variety of projects according to skil
 ### but we have also come up with a core theme: 
 ## a **paper reproducibility hack!**
 
-We are all excited by the progress made by many to make their papers fully reproducible by publishing code and data with their papers. We know how challenging it can be so we want to test how successful our current practices are.
+We are all excited by the progress made by many to make their papers fully reproducible by publishing code and data. We know how challenging it can be so we want to showcase the value of the practice, both for original authors and and as a learning experience for the reproducers. 
 
-Inspired be Owen Petchey's [Reproducible Research in Ecology, Evolution, Behaviour, and Environmental Studies course](https://github.com/opetchey/RREEBES), where students attempt to  reproduce the analysis and figures of a paper from the raw data, we want to attempt to do the same. While they take a few months, we only have a day so instead we'll be trying to do the same but with papers that have also published code. We therefore aim to test how reproducible attempted papers are **'out of the box'**.
+Inspired be **Owen Petchey's** [**Reproducible Research in Ecology, Evolution, Behaviour, and Environmental Studies course**](https://github.com/opetchey/RREEBES), where students attempt to  reproduce the analysis and figures of a paper from the raw data, we want to attempt to do the same. While they take a few months over a number of sessions, we only have a day so instead we'll be trying to do the same but with **papers that have also published code**. 
 
-What we love about this approach, is it provides a low-pressure environment to begin to actually get stuck into some reprodicibility.
-This is not an attempt to defame the writers. So we see reproduction as useful scientific activitiy in itself, with usrful outcomes for understanding the current state and most common issues to reproducbility and the science in the papers themselves. Instead we see it as a necessary step and hope to provide useful feedback to authors if we encounter difficulties and ofcourse spread the word on successful reproductions.
+What we love about this approach, and why we think it fits well in the space of a hack, is that it provides a low-pressure environment to begin to actually get stuck into some reprodicibility. Attempting reproduction provides an opportunity to test how reproducible papers are **'out of the box'**, enabling evaluation of how successful current practices are, and potentially identifying their most pressing weaknessess.
 
-We know reproducibility can be hard and time consuming so we see a hack as a great opportunity.
+This is by no means an an attempt to defame the writers and consent by authors will be sought and involvement is encourgaed. We see reproduction as useful scientific activitiy in itself, with useful outcomes for the science in the papers themselves. We hope to provide useful feedback to authors if we encounter difficulties and ofcourse spread the word on successful reproductions.
+
+
 
 ### **Nominate a paper:**
 
@@ -44,59 +49,51 @@ library("shiny")
 ```
 
 <br>
-```{r}
+
+## **Proposed papers:**
+
+```{r, echo=FALSE}
  wellPanel(a("Refresh paper list", class = "btn btn-primary btn-md", 
           href = "javascript:history.go(0)"))
 ```
 
-## **Proposed papers:**
-```{r, message=FALSE, warning=FALSE,  echo=FALSE}
-
+```{r, echo=FALSE}
 require(googlesheets)
+suppressMessages(gs_auth(token = "googlesheets_token.rds", verbose = FALSE))
+```
+
+
+```{r, message=FALSE, results='asis', warning=FALSE,  echo=FALSE}
 responses_gs <- gs_title("OpenCon Berlin Reproducibility Hack (Responses)")
 responses <- gs_read(responses_gs)
 
-ui <- fluidPage(
-                inputPanel(
-                    actionButton("refresh", "refresh paper list")),
-    
-            uiOutput("papers"))
 
-server <- function(input, output) {
-    
-            responses_gs <- eventReactive(input$refresh, {
-                         gs_title("OpenCon Berlin Reproducibility Hack (Responses)")})
-            get.responses <- reactive({gs_read(responses_gs())})
-            
-                    output$papers <- renderUI({
-                        responses <- get.responses()
-                        w=paste0(
-                        for (i in 1:nrow(responses)){
-                            cat('\n')     
-                            cat('\n')
-                            cat('\n') 
-                            cat("### This is a heading for ", as.character(responses[i, "Paper title"]), "\n") 
-                            cat("#### *submitted by ", as.character(responses[i, "Name"]),"*", "\n")
-                            cat('\n')
-                            cat("**Why should we attempt to reproduce this paper?**", "\n", "\n")
-                            cat(as.character(responses[i, "Why should we attempt to reproduce this paper?"]), "\n")
-                            cat('\n')
-                            cat("**Paper URL:** [", as.character(responses[i, "Paper URL"]),"](",as.character(responses[i, "Paper URL"]) ,")", "\n")
-                            cat('\n')
-                            cat("**Data URL:**", as.character(responses[i, "Data URL"]), "\n")
-                            cat('\n')
-                            cat("**Code URL:**", as.character(responses[i, "Code URL"]), "\n")
-                            cat('\n', "\n")
-                        })
-                        HTML(w)
-                        })
-                    }
-
-shinyApp(ui, server)
-
-
-
-
+for (i in 1:nrow(responses)){
+    cat('\n')     
+    cat('\n')
+    cat('\n') 
+    cat("### **", as.character(responses[i, "Paper title"]), "**", "\n", "\n", sep = "") 
+    cat("**", as.character(responses[i, "Paper citation"]), "**", "\n", "\n", sep = "")
+    cat("##### *submitted by ", as.character(responses[i, "Name"]),"*", "\n")
+    cat('\n')
+    cat("**Why should we attempt to reproduce this paper?**", "\n", "\n")
+    cat(as.character(responses[i, "Why should we attempt to reproduce this paper?"]), "\n")
+    cat('\n')
+    cat("**Paper URL:** [", as.character(responses[i, "Paper URL"]),"](",as.character(responses[i, "Paper URL"]) ,")", "\n")
+    cat('\n')
+    cat("**Data URL:**", as.character(responses[i, "Data URL"]), "\n")
+    cat('\n')
+    cat("**Code URL:**", as.character(responses[i, "Code URL"]), "\n")
+    cat('\n', "\n")
+}
 
 ```
 
+### Event location
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1214.0944192570532!2d13.324341425925487!3d52.51192152731186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a8511d28d14161%3A0x86e4ae804bd7e059!2sTU+Berlin%2C+Centre+for+Entrepreneurship!5e0!3m2!1sen!2suk!4v1477309267070" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+
+### get in touch
+
+Any ways folks can communicate prior to and during the hack? a public slack channel / gitter? Should we stream any of it?
