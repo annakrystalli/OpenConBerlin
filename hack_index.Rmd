@@ -1,44 +1,55 @@
 ---
-output: html_document
+output: 
+    html_document:
+        theme: simplex
 runtime: shiny
 ---
 ![](https://d3n8a8pro7vhmx.cloudfront.net/righttoresearch/pages/1004/features/original/Berlin_-_NB_Banner.png?1473355209)
 
-# **OpenCon Berlin Reproducibility Hack!**
+# **OpenCon Berlin 2016 Reproducibility Hack!**
 <br>
 
 #### **24 Nov 2016 1pm - 6pm (or till we get kicked out)**
 ##### [**Technical University of Berlin, Centre for Entrepreneurship**](http://www.entrepreneurship.tu-berlin.de/menue/willkommen/)
 ###### [***Hardenbergstraße 38, 10623 Berlin***](https://goo.gl/maps/Q9rMC1vpwpL2)
 
+<br>
+
+### [**REGISTER**](https://www.eventbrite.co.uk/e/opencon-berlin-hackathon-tickets-28890667765)
 ***
 
-### We're kicking off [**OpenCon Berlin**](http://www.opencon2016.org/opencon_2016_berlin) with a 
+### We're kicking off [**OpenCon Berlin 2016**](http://www.opencon2016.org/opencon_2016_berlin) with a 
 ## **`hack / creative collaborative coding event!`**
 
 There'll be plenty of options to work on a variety of projects according to skills and interest including:
 
-- Developing the Rfigshare package (figshare new API, in potential collaboration with figshare and Ropensci)
-- Continue the CeTrAn project using the new rfigshare package
+- Developing the [**Rfigshare package**](https://github.com/ropensci/rfigshare) (figshare new API, in potential collaboration with [figshare](https://figshare.com/) and [Ropensci](http://ropensci.org/)).
+- Continue work on the [**CeTrAn project**](https://github.com/jcolomb/CeTrAn) using the new rfigshare package.
 
 <br>
 
 ### but we have also come up with a core theme: 
 ## a **paper reproducibility hack!**
 
-We are all excited by the progress made by many to make their papers fully reproducible by publishing code and data. We know how challenging it can be so we want to showcase the value of the practice, both for original authors and and as a learning experience for the reproducers. 
+We are all excited by the progress made by many to **make their papers fully reproducible by publishing code and data**. We know how challenging it can be so we want to showcase the value of the practice, both for original authors and and as a learning experience for the reproducers. 
 
-Inspired be **Owen Petchey's** [**Reproducible Research in Ecology, Evolution, Behaviour, and Environmental Studies course**](https://github.com/opetchey/RREEBES), where students attempt to  reproduce the analysis and figures of a paper from the raw data, we want to attempt to do the same. While they take a few months over a number of sessions, we only have a day so instead we'll be trying to do the same but with **papers that have also published code**. 
+Inspired by **Owen Petchey's** [**Reproducible Research in Ecology, Evolution, Behaviour, and Environmental Studies course**](https://github.com/opetchey/RREEBES), where students attempt to  reproduce the analyses and figures of a paper from the raw data, we want to attempt to do the same. While they take a few months over a number of sessions, we only have a day so instead we'll be trying to do the same but with **papers that have also published code**. 
 
-What we love about this approach, and why we think it fits well in the space of a hack, is that it provides a low-pressure environment to begin to actually get stuck into some reprodicibility. Attempting reproduction provides an opportunity to test how reproducible papers are **'out of the box'**, enabling evaluation of how successful current practices are, and potentially identifying their most pressing weaknessess.
+What we love about this approach, and why we think it fits well in the space of a hack, is that it provides a low-pressure environment to actually get working with other people's code and data. Attempting reproduction provides an opportunity to test how reproducible papers are **'out of the box'**, enabling evaluation of how successful current practices are, identifying what worked and where the most pressing weaknessess are.
 
-This is by no means an an attempt to defame the writers and consent by authors will be sought and involvement is encourgaed. We see reproduction as useful scientific activitiy in itself, with useful outcomes for the science in the papers themselves. We hope to provide useful feedback to authors if we encounter difficulties and ofcourse spread the word on successful reproductions.
+This is by no means an attempt to discredit work so consent by authors will be sought and their involvement is encouraged. We see reproduction as beneficial scientific activitiy in itself, with useful outcomes for the papers and valuable learning experiences for the participants. We hope to feedback our experiences to authors and of course spread the word on successful practice!
 
+### **a collaborative output:**
 
+We want to **collaborativelly collate and communicate our experiences and outputs** during the session. By collating information and discussions openly through [**github**](https://github.com/features) and collaboratively contributing narrative, we hope to end up with at least a comprehensive blog post or potentially a short paper using [**overleaf**](https://www.overleaf.com/?utm_expid=71700200-7.jX1xSGOgQzGKvOn08hBHag.0).
+
+##### **Go to event** [**github repo**](https://github.com/annakrystalli/OpenConBerlin_ReproHack)
+
+<br>
 
 ### **Nominate a paper:**
 
-We invite nominations from anyone, especially if you would like to test one of your own papers. Either way, it will be best if consent from the original authors has been sought.
+We invite nominations from anyone, especially if you would like to **test one of your own papers!** Either way, we encourage proponents to seek consent from the original authors for their nominations.
 
 
 
@@ -58,8 +69,8 @@ library("shiny")
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-require(googlesheets)
-suppressMessages(gs_auth(token = "googlesheets_token.rds", verbose = FALSE))
+library(googlesheets)
+suppressMessages(gs_auth(verbose = FALSE, cache = T))
 ```
 
 
@@ -72,9 +83,10 @@ for (i in 1:nrow(responses)){
     cat('\n')     
     cat('\n')
     cat('\n') 
-    cat("### **", as.character(responses[i, "Paper title"]), "**", "\n", "\n", sep = "") 
-    cat("**", as.character(responses[i, "Paper citation"]), "**", "\n", "\n", sep = "")
+    cat("### **", i,". ", as.character(responses[i, "Paper title"]), "**", "\n", "\n", sep = "") 
+    cat("**", gsub("\n", "", gsub("[*]", "", as.character(responses[i, "Paper citation"]))), "\n**", "\n", "\n", sep = "")
     cat("##### *submitted by ", as.character(responses[i, "Name"]),"*", "\n")
+    cat('\n')
     cat('\n')
     cat("**Why should we attempt to reproduce this paper?**", "\n", "\n")
     cat(as.character(responses[i, "Why should we attempt to reproduce this paper?"]), "\n")
@@ -85,9 +97,18 @@ for (i in 1:nrow(responses)){
     cat('\n')
     cat("**Code URL:**", as.character(responses[i, "Code URL"]), "\n")
     cat('\n', "\n")
+    cat("**Required programming skills:**", as.character(responses[i, "Required programming skills"]), "\n")
+    cat('\n', "\n",'\n')
+    
+    
 }
 
 ```
+
+***
+
+<br>
+<br>
 
 ### Event location
 
@@ -96,4 +117,16 @@ for (i in 1:nrow(responses)){
 
 ### get in touch
 
-Any ways folks can communicate prior to and during the hack? a public slack channel / gitter? Should we stream any of it?
+Chat to us on [**gitter**](https://gitter.im/OCB_ReproHack/Lobby) or check out the [**hackpad**](https://public.etherpad-mozilla.org/p/OpenConBerlin2016_ReproHack)
+
+<br>
+
+***
+
+<img src="https://www.overleaf.com/overleaf-partner/overleaf-greygreen-410.png" width="150px"></img>
+<img src="https://paperhive.org/static/img/logo.png" width="150px"></img>
+<img src="https://www.coar-repositories.org/files/OpenAIRE-Logo1.jpg" width="150px"></img>
+<img src="http://www.nordp.org/assets/SponsorLogos/digitalscience.png" width="150px"></img>
+<img src="https://peerreviewweek.files.wordpress.com/2016/06/scienceopen-logo1.png" width="200px"></img>
+
+
